@@ -3,8 +3,8 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { useExperiences } from '@/app/contexts/ExperiencesContext'
-import { useEffect, useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 interface Experience {
   product_id: string
@@ -22,8 +22,6 @@ interface Experience {
 
 export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
   const { experiences, loading } = useExperiences()
-  const [currentAttraction, setCurrentAttraction] = useState(0)
-  const [currentExpectation, setCurrentExpectation] = useState(0)
 
   if (loading) {
     return <p className="p-4 text-gray-600">Cargando experiencia...</p>
@@ -58,29 +56,19 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
         {/* Swiper de attraction_cards */}
         {attractionCards.length > 0 && (
           <div className="mt-6">
-            <div className="relative bg-blue-50 p-4 rounded-xl shadow-md">
-              <button
-                onClick={() =>
-                  setCurrentAttraction((prev) => (prev - 1 + attractionCards.length) % attractionCards.length)
-                }
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-blue-600"
-                aria-label="Anterior"
-              >
-                <ChevronLeft size={28} />
-              </button>
-              <div className="text-center text-blue-900 font-medium text-lg">
-                {attractionCards[currentAttraction].reason}
-              </div>
-              <button
-                onClick={() =>
-                  setCurrentAttraction((prev) => (prev + 1) % attractionCards.length)
-                }
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
-                aria-label="Siguiente"
-              >
-                <ChevronRight size={28} />
-              </button>
-            </div>
+            <Swiper
+              spaceBetween={16}
+              slidesPerView={1.2}
+              grabCursor={true}
+            >
+              {attractionCards.map((card, idx) => (
+                <SwiperSlide key={idx}>
+                  <div className="bg-blue-50 p-4 rounded-xl shadow text-center text-blue-900 font-medium">
+                    {card.reason}
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         )}
 
@@ -89,33 +77,25 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
         {/* Swiper de expectation_images */}
         {expectationImages.length > 0 && (
-          <div className="relative mt-4 h-56 rounded-xl overflow-hidden">
-            <Image
-              src={expectationImages[currentExpectation].image}
-              alt={`expectation-${currentExpectation}`}
-              fill
-              className="object-cover"
-            />
-            <button
-              onClick={() =>
-                setCurrentExpectation((prev) =>
-                  (prev - 1 + expectationImages.length) % expectationImages.length
-                )
-              }
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white bg-black/50 rounded-full p-1"
-              aria-label="Anterior"
+          <div className="mt-4">
+            <Swiper
+              spaceBetween={16}
+              slidesPerView={1.2}
+              grabCursor={true}
             >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentExpectation((prev) => (prev + 1) % expectationImages.length)
-              }
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white bg-black/50 rounded-full p-1"
-              aria-label="Siguiente"
-            >
-              <ChevronRight size={24} />
-            </button>
+              {expectationImages.map((item, idx) => (
+                <SwiperSlide key={idx}>
+                  <div className="relative h-56 rounded-xl overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={`expectation-${idx}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         )}
 
