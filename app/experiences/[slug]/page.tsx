@@ -1,65 +1,44 @@
-import { getExperienceBySlug } from '@/app/data/experiences'
-import Image from 'next/image'
+'use client'
+
 import { notFound } from 'next/navigation'
-import type { Metadata, ResolvingMetadata } from 'next'
+import Image from 'next/image'
+import { useExperiences } from '@/app/contexts/ExperiencesContext'
 
-// ✅ ¡NO declares interface ExperiencePageProps!
-
-type Props = {
-  params: { slug: string }
+interface Experience {
+  product_id: string
+  name: string
+  description: string
+  image: string
+  price: number
+  zone: string
+  state: string
+  slug: string
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  _parent: ResolvingMetadata
-): Promise<Metadata> {
-  const experience = getExperienceBySlug(params.slug)
+export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
+  const { experiences, loading } = useExperiences()
 
-  if (!experience) {
-    return {
-      title: 'Experiencia no encontrada',
-      description: 'No pudimos encontrar la experiencia que buscabas.',
-    }
+  if (loading) {
+    return <p className="p-4 text-gray-600">Cargando experiencia...</p>
   }
 
-  return {
-    title: experience.title,
-    description: experience.location,
-  }
-}
+  const experience = experiences.find((exp) => exp.slug === params.slug)
 
-export default async function ExperiencePage({ params }: Props) {
-  const experience = getExperienceBySlug(params.slug)
-
-  if (!experience) {
-    notFound()
-  }
+  if (!experience) return notFound()
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-blue-50 text-gray-800" role="main">
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <header className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-900 leading-tight mb-2">
-            {experience.title}
-          </h1>
-          <p className="text-lg text-gray-600">{experience.location}</p>
-        </header>
-
-        <div className="relative w-full h-64 sm:h-96 md:h-[500px] mb-10 rounded-2xl overflow-hidden shadow-lg border border-blue-100">
-          <Image
-            src={experience.image}
-            alt={`Imagen de ${experience.title}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 700px"
-            className="object-cover"
-            priority
-          />
-        </div>
-
-        <section className="prose prose-blue max-w-none text-lg leading-relaxed">
-          <p>{experience.description}</p>
-        </section>
-      </article>
-    </main>
+    <div className="max-w-3xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">{experience.name}</h1>
+      <Image
+        src={experience.image}
+        alt={experience.name}
+        width={800}
+        height={400}
+        className="rounded-xl w-full object-cover mb-4"
+      />
+      <p className="text-lg text-gray-700">{experience.description}</p>
+      <p className="text-xl font-semibold mt-4">${experience.price}</p>
+      <p className="text-sm text-gray-500 mt-2">{experience.zone}, {experience.state}</p>
+    </div>
   )
 }

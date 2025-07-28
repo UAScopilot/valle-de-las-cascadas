@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from './components/Navbar'
+import { ExperiencesProvider } from './contexts/ExperiencesContext' // 👈 Importación del contexto
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <Navbar />
-        {children}
+        <ExperiencesProvider> {/* 👈 Proveedor global */}
+          <Navbar />
+          {children}
+        </ExperiencesProvider>
       </body>
     </html>
   )
