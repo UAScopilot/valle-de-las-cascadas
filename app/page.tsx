@@ -1,14 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import Navbar from './components/Navbar'
 import SearchBar from './components/SearchBar'
 import ExperienceCard from './components/ExperienceCard'
 import { experiences } from './data/experiences'
 import { useDebounce } from './hooks/useDebounce'
-
-// ❌ Removemos esta parte:
-// export const metadata = { ... }
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -21,7 +17,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100" role="main">
-      <Navbar />
       <SearchBar value={searchTerm} onChange={setSearchTerm} />
       
       <section className="max-w-6xl mx-auto mt-12 px-6 lg:px-8">
