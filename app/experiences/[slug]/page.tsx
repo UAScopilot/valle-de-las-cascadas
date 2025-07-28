@@ -55,10 +55,10 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
         <p className="text-xl text-blue-700 font-semibold">${experience.price}</p>
         <p className="text-gray-700">{experience.description}</p>
 
-        {/* Texto fijo arriba del swiper */}
+        {/* Texto montado sobre swiper */}
         {attractionCards.length > 0 && (
-          <>
-            <h3 className="text-xl font-semibold text-blue-900">
+          <div className="relative mt-10">
+            <h3 className="text-xl font-semibold text-white bg-blue-900 px-4 py-2 rounded-md shadow-md w-fit mx-auto z-10 relative -mb-10">
               ¡{attractionCards.length} Razones para elegir esta experiencia!
             </h3>
 
@@ -78,7 +78,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                 </SwiperSlide>
               ))}
             </Swiper>
-          </>
+          </div>
         )}
 
         {/* Expectation title */}
