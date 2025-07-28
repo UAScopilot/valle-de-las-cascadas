@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { useExperiences } from '@/app/contexts/ExperiencesContext'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination } from 'swiper/modules'
 import 'swiper/css'
+import 'swiper/css/pagination'
 
 interface Experience {
   product_id: string
@@ -53,32 +55,41 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
         <p className="text-xl text-blue-700 font-semibold">${experience.price}</p>
         <p className="text-gray-700">{experience.description}</p>
 
-        {/* Swiper de attraction_cards */}
+        {/* Texto fijo arriba del swiper */}
         {attractionCards.length > 0 && (
-          <div className="mt-6">
+          <>
+            <h3 className="text-xl font-semibold text-blue-900">
+              ¡{attractionCards.length} Razones para elegir esta experiencia!
+            </h3>
+
             <Swiper
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
               spaceBetween={16}
-              slidesPerView={1.2}
+              slidesPerView={1}
               grabCursor={true}
+              className="w-full"
             >
               {attractionCards.map((card, idx) => (
                 <SwiperSlide key={idx}>
-                  <div className="bg-blue-50 p-4 rounded-xl shadow text-center text-blue-900 font-medium">
+                  <div className="bg-blue-50 h-[300px] px-6 py-8 shadow text-center text-blue-900 text-[25px] flex items-center justify-center">
                     {card.reason}
                   </div>
                 </SwiperSlide>
               ))}
             </Swiper>
-          </div>
+          </>
         )}
 
         {/* Expectation title */}
         <h2 className="text-2xl font-bold text-gray-800 mt-8">Lo que encontrarás</h2>
 
-        {/* Swiper de expectation_images */}
+        {/* Swiper de expectation_images con paginación */}
         {expectationImages.length > 0 && (
           <div className="mt-4">
             <Swiper
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
               spaceBetween={16}
               slidesPerView={1.2}
               grabCursor={true}
