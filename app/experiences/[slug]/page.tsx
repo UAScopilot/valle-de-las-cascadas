@@ -8,7 +8,8 @@ import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+// Importamos los nuevos iconos de Lucide React aquí:
+import { ChevronLeft, ChevronRight, Clock, Utensils, Users, CalendarDays } from 'lucide-react'
 
 interface Experience {
   product_id: string
@@ -22,6 +23,16 @@ interface Experience {
   attraction_cards?: Record<string, { reason: string }>
   expectation_images?: Record<string, { image: string }>
   expectations?: string
+  includes_food?: string
+  duration?: string
+  duration_type?: string
+  address?: string
+  address_details?: string
+  address_zone?: string
+  meeting_point?: string
+  meeting_time?: string
+  maximum_visitors?: number
+  plan?: Record<string, { title: string; description: string; order: string | number }>
 }
 
 export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
@@ -36,17 +47,22 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
   const expectationImages = Object.values(experience.expectation_images || {})
   const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona`
 
+  // Sort plan steps by 'order'
+  const planSteps = Object.values(experience.plan || {}).sort((a, b) =>
+    parseInt(a.order as string) - parseInt(b.order as string)
+  );
+
   const whatsappUrl = `https://wa.me/573007598533?text=Hola,%20quiero%20reservar%20la%20experiencia%20${encodeURIComponent(
     experience.name
   )}`
 
   return (
-    <div className="relative min-h-screen pb-20 bg-[#f9fafb] overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 xl:grid-cols-12 gap-6 mt-6">
+    <div className="relative min-h-screen pb-20 bg-gray-100 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 xl:grid-cols-12 gap-8 mt-6">
         {/* Columna principal */}
         <div className="xl:col-span-8 overflow-x-hidden">
           {/* Imagen superior */}
-          <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] xl:h-[480px] 2xl:h-[560px] rounded-xl overflow-hidden">
+          <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] xl:h-[480px] 2xl:h-[560px] rounded-xl overflow-hidden shadow-md">
             <Image
               src={experience.image}
               alt={experience.name}
@@ -56,25 +72,83 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             />
           </div>
 
-          <div className="w-full space-y-6">
-            <h1 className="text-3xl font-bold text-[#374151] mb-1">{experience.name}</h1>
-            <p className="text-2xl text-[#14532d] font-semibold mt-0">{pricePerPerson}</p>
-            <p className="text-[#4A4A4A] text-[17px] leading-relaxed">{experience.description}</p>
+          <div className="w-full space-y-8 mt-8 p-4 bg-white rounded-xl shadow-sm">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+              {experience.name}
+            </h1>
+            <p className="text-2xl font-bold text-green-700 mt-0">{pricePerPerson}</p>
+
+            {/* Basic Info Badges */}
+            <div className="flex flex-wrap items-center gap-4 text-gray-700">
+              {experience.duration && experience.duration_type && (
+                <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
+                  {/* Icono de Duración con Lucide */}
+                  <Clock className="h-5 w-5 mr-2 text-green-600" />
+                  <span>
+                    Duración: {experience.duration} {experience.duration_type}
+                  </span>
+                </div>
+              )}
+              {experience.includes_food === '1' && (
+                <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
+                  {/* Icono de Comida con Lucide */}
+                  <Utensils className="h-5 w-5 mr-2 text-green-600" />
+                  <span>Incluye comida</span>
+                </div>
+              )}
+              {experience.maximum_visitors && (
+                <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
+                  {/* Icono de Visitantes con Lucide */}
+                  <Users className="h-5 w-5 mr-2 text-green-600" />
+                  <span>Máximo {experience.maximum_visitors} personas</span>
+                </div>
+              )}
+            </div>
+
+            <p className="text-gray-700 text-lg leading-relaxed">{experience.description}</p>
+
+            {/* Additional Details: Address and Meeting Point */}
+            {(experience.address || experience.meeting_point) && (
+              <div className="mt-8 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Detalles y Ubicación</h2>
+                {experience.address && (
+                  <div className="mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">Dirección:</h3>
+                    <p className="text-gray-700 text-lg">{experience.address}</p>
+                    {experience.address_details && (
+                      <p className="text-gray-600 text-base mt-1 italic">{experience.address_details}</p>
+                    )}
+                    {experience.address_zone && (
+                      <p className="text-gray-600 text-base mt-1">Zona: {experience.address_zone}</p>
+                    )}
+                  </div>
+                )}
+                {experience.meeting_point && (
+                  <div className="mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">Punto de Encuentro:</h3>
+                    <p className="text-gray-700 text-lg">{experience.meeting_point}</p>
+                    {experience.meeting_time && (
+                      <p className="text-gray-600 text-base mt-1">Hora de Encuentro: {experience.meeting_time}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Swiper 1: attraction_cards */}
             {attractionCards.length > 0 && (
-              <div className="relative mt-10">
-                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-lg font-semibold text-center text-[#374151] w-full z-10 relative top-4 sm:top-6 md:top-8 lg:top-10 xl:top-12 2xl:top-16">
+              <div className="relative mt-12 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                <h3 className="text-2xl md:text-3xl font-extrabold text-center text-gray-900 mb-6">
                   ¡{attractionCards.length} Razones para elegir esta experiencia!
                 </h3>
 
                 <div className="relative">
                   <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
-                    <div className="swiper-button-prev-1 pointer-events-auto bg-white/70 hover:bg-white text-gray-700 rounded-full p-2 shadow">
-                      <ChevronLeft className="w-6 h-6" />
+                    <div className="swiper-button-prev-1 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronLeft className="w-7 h-7" />
                     </div>
-                    <div className="swiper-button-next-1 pointer-events-auto bg-white/70 hover:bg-white text-gray-700 rounded-full p-2 shadow">
-                      <ChevronRight className="w-6 h-6" />
+                    <div className="swiper-button-next-1 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronRight className="w-7 h-7" />
                     </div>
                   </div>
 
@@ -85,15 +159,15 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                       nextEl: '.swiper-button-next-1',
                       prevEl: '.swiper-button-prev-1',
                     }}
-                    spaceBetween={0}
+                    spaceBetween={20}
                     loop={true}
                     slidesPerView={1}
                     grabCursor={true}
-                    className="w-full max-w-full"
+                    className="w-full"
                   >
                     {attractionCards.map((card, idx) => (
                       <SwiperSlide key={idx}>
-                        <div className="bg-[#f3f4f6] h-[240px] sm:h-[280px] lg:h-[360px] xl:h-[360px] 2xl:h-[450px] font-bold px-6 py-8 text-center text-[#14532d] text-[25px] flex items-center justify-center rounded-xl overflow-hidden">
+                        <div className="bg-white border border-gray-200 h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[400px] 2xl:h-[480px] font-semibold px-8 py-10 text-center text-gray-800 text-2xl flex items-center justify-center rounded-xl shadow-sm">
                           {card.reason}
                         </div>
                       </SwiperSlide>
@@ -103,18 +177,43 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
               </div>
             )}
 
+            {/* Plan de Experiencia */}
+            {planSteps.length > 0 && (
+                <div className="mt-12 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">Tu Plan de Experiencia</h2>
+                    <ol className="relative border-s border-gray-200 ml-4 md:ml-0">
+                        {planSteps.map((step, idx) => (
+                            <li key={idx} className="mb-10 ms-6">
+                                <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -start-4 ring-8 ring-white">
+                                    {/* Icono de Calendario con Lucide */}
+                                    <CalendarDays className="w-4 h-4 text-gray-600" />
+                                </span>
+                                <h3 className="flex items-center mb-1 text-xl font-semibold text-gray-900">
+                                    {step.title}
+                                </h3>
+                                <p className="mb-4 text-lg font-normal text-gray-700">
+                                    {step.description}
+                                </p>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            )}
+
             {/* Swiper 2: expectation_images */}
             {expectationImages.length > 0 && (
-              <div className="mt-10">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Lo que encontrarás</h2>
+              <div className="mt-12 p-4 bg-white rounded-xl shadow-sm">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
+                  Lo que encontrarás
+                </h2>
 
                 <div className="relative">
                   <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
-                    <div className="swiper-button-prev-2 pointer-events-auto bg-white/70 hover:bg-white text-gray-700 rounded-full p-2 shadow">
-                      <ChevronLeft className="w-6 h-6" />
+                    <div className="swiper-button-prev-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronLeft className="w-7 h-7" />
                     </div>
-                    <div className="swiper-button-next-2 pointer-events-auto bg-white/70 hover:bg-white text-gray-700 rounded-full p-2 shadow">
-                      <ChevronRight className="w-6 h-6" />
+                    <div className="swiper-button-next-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronRight className="w-7 h-7" />
                     </div>
                   </div>
 
@@ -129,11 +228,11 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                     loop={true}
                     slidesPerView={1}
                     grabCursor={true}
-                    className="w-full max-w-full"
+                    className="w-full"
                   >
                     {expectationImages.map((item, idx) => (
                       <SwiperSlide key={idx}>
-                        <div className="relative h-[240px] sm:h-[280px] lg:h-[360px] xl:h-[360px] 2xl:h-[450px] rounded-xl overflow-hidden">
+                        <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[400px] 2xl:h-[480px] rounded-xl overflow-hidden shadow-md">
                           <Image
                             src={item.image}
                             alt={`expectation-${idx}`}
@@ -150,7 +249,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
             {/* Texto final */}
             {experience.expectations && (
-              <p className="mt-4 text-gray-700 leading-relaxed text-[16px]">
+              <p className="mt-8 text-gray-700 text-lg leading-relaxed p-4 bg-white rounded-xl shadow-sm">
                 {experience.expectations}
               </p>
             )}
@@ -158,52 +257,56 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
         </div>
 
         {/* Sidebar Fijo */}
-        <aside className="hidden xl:block fixed top-28 right-[80px] w-[380px] bg-white rounded-xl shadow-lg p-6 h-fit z-30">
-          <div className="text-xl font-semibold text-[#14532d] mb-4">Reserva tu experiencia</div>
-          <p className="text-[17px] text-[#14532d] font-semibold">{pricePerPerson}</p>
+        <aside className="hidden xl:block fixed top-28 right-[calc((100vw-1280px)/2)] w-[380px] bg-white rounded-xl shadow-lg p-6 h-fit z-30 border border-gray-200">
+          <div className="text-2xl font-bold text-green-700 mb-5">Reserva tu experiencia</div>
+          <p className="text-xl text-gray-800 font-bold mb-4">{pricePerPerson}</p>
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+          <label htmlFor="date" className="block text-base font-medium text-gray-700 mb-2">Fecha</label>
           <input
+            id="date"
             type="date"
-            className="w-full border rounded-lg p-2 mb-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full border border-gray-300 rounded-lg p-3 mb-5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200"
           />
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">Hora</label>
-          <select className="w-full border rounded-lg p-2 mb-4 text-gray-700">
+          <label htmlFor="time" className="block text-base font-medium text-gray-700 mb-2">Hora</label>
+          <select
+            id="time"
+            className="w-full border border-gray-300 rounded-lg p-3 mb-5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200"
+          >
             <option>10:00 AM</option>
             <option>2:00 PM</option>
             <option>5:00 PM</option>
           </select>
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">Personas</label>
-          <select className="w-full border rounded-lg p-2 mb-4 text-gray-700">
+          <label htmlFor="people" className="block text-base font-medium text-gray-700 mb-2">Personas</label>
+          <select
+            id="people"
+            className="w-full border border-gray-300 rounded-lg p-3 mb-6 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200"
+          >
             <option>1 Adulto</option>
             <option>2 Adultos</option>
             <option>3 Adultos</option>
             <option>4 Adultos</option>
+            <option>5+ Adultos</option>
           </select>
-
-          <div className="flex items-center gap-2 text-sm text-pink-600 font-medium mt-4 mb-6">
-            <span className="font-semibold"></span>
-          </div>
 
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full text-center bg-[#14532d] text-white text-lg font-semibold px-6 py-3 rounded-xl hover:bg-green-700 transition-all"
+            className="block w-full text-center bg-green-600 text-white text-xl font-bold px-6 py-4 rounded-xl hover:bg-green-700 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg"
           >
             Reservar Experiencia
           </a>
         </aside>
 
         {/* Botón fijo solo visible en móvil */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 xl:hidden z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 xl:hidden z-50 shadow-lg">
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full text-center bg-[#14532d] text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-all"
+            className="block w-full text-center bg-green-600 text-white text-lg font-bold py-3 rounded-xl hover:bg-green-700 transition-all duration-300 ease-in-out shadow-md"
           >
             Reservar Experiencia
           </a>
