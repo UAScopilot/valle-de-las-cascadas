@@ -60,8 +60,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             {/* Swiper 1: attraction_cards */}
             {attractionCards.length > 0 && (
               <div className="relative mt-10">
-                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-lg font-semibold py8 text-center text-[#14532d] w-full z-10 relative -mb-12">
-                  ¡{attractionCards.length} Razones para elegir esta experiencia!
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-lg font-semibold text-center text-[#374151] w-full z-10 relative top-4 sm:top-6 md:top-8 lg:top-10 xl:top-12 2xl:top-16">
+                ¡{attractionCards.length} Razones para elegir esta experiencia!
                 </h3>
 
                 <div className="relative">
@@ -89,7 +89,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   >
                     {attractionCards.map((card, idx) => (
                       <SwiperSlide key={idx}>
-                        <div className="bg-[#f3f4f6] h-[240px] sm:h-[280px] lg:h-[360px] xl:h-[360px] 2xl:h-[450px] px-6 py-8 text-center text-[#374151] text-[25px] flex items-center justify-center rounded-xl overflow-hidden">
+                        <div className="bg-[#f3f4f6] h-[240px] sm:h-[280px] lg:h-[360px] xl:h-[360px] 2xl:h-[450px] font-bold px-6 py-8 text-center text-[#14532d] text-[25px] flex items-center justify-center rounded-xl overflow-hidden">
                           {card.reason}
                         </div>
                       </SwiperSlide>
