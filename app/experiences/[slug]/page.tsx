@@ -27,18 +27,22 @@ interface Experience {
 export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
   const { experiences, loading } = useExperiences()
 
-  if (loading) return <p className="p-4 text-gray-600">Cargando experiencia...</p>
+  if (loading) return <p className="p-4 text-gray-600">Cargando experiencia.</p>
 
   const experience = experiences.find((exp) => exp.slug === params.slug) as Experience | undefined
   if (!experience) return notFound()
 
   const attractionCards = Object.values(experience.attraction_cards || {})
   const expectationImages = Object.values(experience.expectation_images || {})
-  const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona` //Precio Por Persona
+  const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona`
+
+  const whatsappUrl = `https://wa.me/573007598533?text=Hola,%20quiero%20reservar%20la%20experiencia%20${encodeURIComponent(
+    experience.name
+  )}`
+
   return (
     <div className="relative min-h-screen pb-20 bg-[#f9fafb] overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 xl:grid-cols-12 gap-6 mt-6">
-
         {/* Columna principal */}
         <div className="xl:col-span-8 overflow-x-hidden">
           {/* Imagen superior */}
@@ -53,7 +57,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           </div>
 
           <div className="w-full space-y-6">
-            <h1 className="text-3xl font-bold text-[#374151]" mb-1>{experience.name}</h1>
+            <h1 className="text-3xl font-bold text-[#374151] mb-1">{experience.name}</h1>
             <p className="text-2xl text-[#14532d] font-semibold mt-0">{pricePerPerson}</p>
             <p className="text-[#4A4A4A] text-[17px] leading-relaxed">{experience.description}</p>
 
@@ -61,7 +65,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             {attractionCards.length > 0 && (
               <div className="relative mt-10">
                 <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-lg font-semibold text-center text-[#374151] w-full z-10 relative top-4 sm:top-6 md:top-8 lg:top-10 xl:top-12 2xl:top-16">
-                ¡{attractionCards.length} Razones para elegir esta experiencia!
+                  ¡{attractionCards.length} Razones para elegir esta experiencia!
                 </h3>
 
                 <div className="relative">
@@ -180,19 +184,29 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           </select>
 
           <div className="flex items-center gap-2 text-sm text-pink-600 font-medium mt-4 mb-6">
-            
             <span className="font-semibold"></span>
           </div>
 
-          <button className="w-full bg-[#14532d] text-white text-lg font-semibold px-6 py-3 rounded-xl hover:bg-green-700 transition-all">
-            Seleccionar
-          </button>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center bg-[#14532d] text-white text-lg font-semibold px-6 py-3 rounded-xl hover:bg-green-700 transition-all"
+          >
+            Reservar Experiencia
+          </a>
         </aside>
+
         {/* Botón fijo solo visible en móvil */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 xl:hidden z-50">
-         <button className="w-full bg-[#14532d] text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-all">
-          Reservar Experiencia
-         </button>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center bg-[#14532d] text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-all"
+          >
+            Reservar Experiencia
+          </a>
         </div>
       </div>
     </div>
