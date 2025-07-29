@@ -1,68 +1,61 @@
-'use client'
+// app/contexts/ExperiencesContext.tsx
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { ref, get } from 'firebase/database'
-import { db } from '@/lib/firebase'
+import React, { createContext, useContext, useState, useEffect } from 'react';
+// Rutas corregidas: subimos dos niveles para llegar a 'lib'
+import { getExperiences, Experience } from '../../lib/getExperiences';
+import { getAllInfoDataFromFirebase, InfoItem } from '../../lib/getFirebaseInfo';
 
-export interface Experience {
-  product_id: string
-  name: string
-  description: string
-  image: string
-  price: number
-  zone: string
-  state: string
-  slug: string
+interface ExperiencesContextType {
+  experiences: Experience[];
+  allInfoData: Record<string, InfoItem>;
+  loading: boolean;
+  error: string | null;
 }
 
-interface ExperiencesContextValue {
-  experiences: Experience[]
-  loading: boolean
-  error: string | null
-}
+const ExperiencesContext = createContext<ExperiencesContextType | undefined>(undefined);
 
-const ExperiencesContext = createContext<ExperiencesContextValue>({
-  experiences: [],
-  loading: true,
-  error: null,
-})
-
-export const ExperiencesProvider = ({ children }: { children: React.ReactNode }) => {
-  const [experiences, setExperiences] = useState<Experience[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export function ExperiencesProvider({ children }: { children: React.ReactNode }) {
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [allInfoData, setAllInfoData] = useState<Record<string, InfoItem>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchExperiences() {
+    async function fetchData() {
       try {
-        const dbRef = ref(db, 'projects/proj_rsK6jYGJzKf9mkbruz2oe6/data/experiences')
-        const snapshot = await get(dbRef)
+        setLoading(true);
+        setError(null);
 
-        if (!snapshot.exists()) {
-          setExperiences([])
-          setLoading(false)
-          return
-        }
+        const [fetchedExperiences, fetchedInfoData] = await Promise.all([
+          getExperiences(),
+          getAllInfoDataFromFirebase(),
+        ]);
 
-        const rawData = snapshot.val()
-        const data = Object.values(rawData) as Experience[]
-        setExperiences(data)
-      } catch (err: any) {
-        console.error('Error al obtener experiencias:', err)
-        setError(err.message || 'Error desconocido')
+        setExperiences(fetchedExperiences);
+        setAllInfoData(fetchedInfoData);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Error al cargar los datos.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchExperiences()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
-    <ExperiencesContext.Provider value={{ experiences, loading, error }}>
+    <ExperiencesContext.Provider value={{ experiences, allInfoData, loading, error }}>
       {children}
     </ExperiencesContext.Provider>
-  )
+  );
 }
 
-export const useExperiences = () => useContext(ExperiencesContext)
+export function useExperiences() {
+  const context = useContext(ExperiencesContext);
+  if (context === undefined) {
+    throw new Error('useExperiences must be used within an ExperiencesProvider');
+  }
+  return context;
+}

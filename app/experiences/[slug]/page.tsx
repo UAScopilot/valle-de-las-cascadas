@@ -1,3 +1,4 @@
+// app/experience/[slug]/page.tsx
 'use client'
 
 import { notFound } from 'next/navigation'
@@ -8,46 +9,49 @@ import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-// Importamos los nuevos iconos de Lucide React aquí:
-import { ChevronLeft, ChevronRight, Clock, Utensils, Users, CalendarDays } from 'lucide-react'
+import {
+  ChevronLeft, ChevronRight, Clock, Utensils, Users, CalendarDays,
+  // Corregido: Importa Languages en lugar de Language
+  Languages, MapPin, XCircle, UtensilsCrossed, CheckCircle,
+  LucideIcon // Necesitas este tipo para el iconMap
+} from 'lucide-react'
 
-interface Experience {
-  product_id: string
-  name: string
-  description: string
-  image: string
-  price: number
-  zone: string
-  state: string
-  slug: string
-  attraction_cards?: Record<string, { reason: string }>
-  expectation_images?: Record<string, { image: string }>
-  expectations?: string
-  includes_food?: string
-  duration?: string
-  duration_type?: string
-  address?: string
-  address_details?: string
-  address_zone?: string
-  meeting_point?: string
-  meeting_time?: string
-  maximum_visitors?: number
-  plan?: Record<string, { title: string; description: string; order: string | number }>
-}
+// Importa las interfaces desde lib/getFirebaseInfo.ts
+import { InfoItem, ExperienceInfoReference, GroupedInfo } from '@/lib/getFirebaseInfo';
+
+
+// Mapeo de nombres de iconos a componentes de Lucide.
+// Asegúrate de que 'language' ahora mapee a Languages
+const iconMap: Record<string, LucideIcon> = {
+  language: Languages, // Corregido aquí
+  my_location: MapPin,
+  cancel: XCircle,
+  restaurant: UtensilsCrossed,
+  check: CheckCircle,
+  // Añade aquí cualquier otro icono que aparezca en tu info.json
+};
+
+// La interfaz Experience ya no necesita definirse aquí si se importa desde ExperiencesContext
+// (se importa indirectamente a través de useExperiences)
+
 
 export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
-  const { experiences, loading } = useExperiences()
+  // Obtén experiences y allInfoData del contexto. Experience ya viene tipada desde ExperiencesContext
+  const { experiences, allInfoData, loading } = useExperiences()
 
   if (loading) return <p className="p-4 text-gray-600">Cargando experiencia.</p>
 
-  const experience = experiences.find((exp) => exp.slug === params.slug) as Experience | undefined
-  if (!experience) return notFound()
+  // Asegúrate de usar la interfaz Experience importada si la necesitas en este archivo,
+  // aunque el contexto ya te la proporciona tipada.
+  const experience = experiences.find((exp) => exp.slug === params.slug); // Removido 'as Experience | undefined' aquí
 
+  if (!experience) return notFound(); // Si no se encuentra la experiencia
+
+  // El resto de tu lógica para procesar los datos de la experiencia
   const attractionCards = Object.values(experience.attraction_cards || {})
   const expectationImages = Object.values(experience.expectation_images || {})
   const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona`
 
-  // Sort plan steps by 'order'
   const planSteps = Object.values(experience.plan || {}).sort((a, b) =>
     parseInt(a.order as string) - parseInt(b.order as string)
   );
@@ -55,6 +59,45 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
   const whatsappUrl = `https://wa.me/573007598533?text=Hola,%20quiero%20reservar%20la%20experiencia%20${encodeURIComponent(
     experience.name
   )}`
+
+  const additionalInfo: GroupedInfo[] = [];
+  if (experience.info) {
+    const relevantInfoItems: InfoItem[] = [];
+
+    for (const infoKey in experience.info) {
+      const infoRef = experience.info[infoKey];
+      const detail = allInfoData[infoRef.info_id];
+      if (detail) {
+        relevantInfoItems.push(detail);
+      }
+    }
+
+    const grouped: { [title: string]: GroupedInfo } = {};
+
+    relevantInfoItems.forEach(item => {
+      if (!grouped[item.product_info_title]) {
+        grouped[item.product_info_title] = {
+          title: item.product_info_title,
+          order: parseInt(item.order),
+          items: [],
+        };
+      }
+      const IconComponent = iconMap[item.icon];
+      if (IconComponent) {
+        grouped[item.product_info_title].items.push({
+          icon: IconComponent,
+          product_info: item.product_info,
+          item_order: parseInt(item.item_order),
+        });
+      }
+    });
+
+    for (const title in grouped) {
+      grouped[title].items.sort((a, b) => a.item_order - b.item_order);
+      additionalInfo.push(grouped[title]);
+    }
+    additionalInfo.sort((a, b) => a.order - b.order);
+  }
 
   return (
     <div className="relative min-h-screen pb-20 bg-gray-100 overflow-x-hidden">
@@ -82,7 +125,6 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             <div className="flex flex-wrap items-center gap-4 text-gray-700">
               {experience.duration && experience.duration_type && (
                 <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
-                  {/* Icono de Duración con Lucide */}
                   <Clock className="h-5 w-5 mr-2 text-green-600" />
                   <span>
                     Duración: {experience.duration} {experience.duration_type}
@@ -91,14 +133,12 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
               )}
               {experience.includes_food === '1' && (
                 <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
-                  {/* Icono de Comida con Lucide */}
                   <Utensils className="h-5 w-5 mr-2 text-green-600" />
                   <span>Incluye comida</span>
                 </div>
               )}
               {experience.maximum_visitors && (
                 <div className="flex items-center text-lg bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
-                  {/* Icono de Visitantes con Lucide */}
                   <Users className="h-5 w-5 mr-2 text-green-600" />
                   <span>Máximo {experience.maximum_visitors} personas</span>
                 </div>
@@ -132,6 +172,34 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                     )}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Renderizar la sección de Información Adicional */}
+            {additionalInfo.length > 0 && (
+              <div className="mt-12 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">Información Adicional</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-10">
+                  {additionalInfo.map((group, groupIdx) => (
+                    <div key={groupIdx} className="mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+                        {/* Puedes poner un icono aquí si lo deseas para el título del grupo */}
+                        {group.title}
+                      </h3>
+                      <ul className="space-y-2">
+                        {group.items.map((item, itemIdx) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <li key={itemIdx} className="flex items-start text-gray-700 text-lg">
+                              <IconComponent className="flex-shrink-0 w-5 h-5 mr-3 text-green-600 mt-1" />
+                              <span>{item.product_info}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -185,7 +253,6 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                         {planSteps.map((step, idx) => (
                             <li key={idx} className="mb-10 ms-6">
                                 <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -start-4 ring-8 ring-white">
-                                    {/* Icono de Calendario con Lucide */}
                                     <CalendarDays className="w-4 h-4 text-gray-600" />
                                 </span>
                                 <h3 className="flex items-center mb-1 text-xl font-semibold text-gray-900">
