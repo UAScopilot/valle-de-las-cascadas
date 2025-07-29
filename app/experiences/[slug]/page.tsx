@@ -53,14 +53,14 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           </div>
 
           <div className="w-full space-y-6">
-            <h1 className="text-3xl font-bold text-[#374151]">{experience.name}</h1>
-            <p className="text-2xl text-[#14532d] font-semibold">{pricePerPerson}</p>
+            <h1 className="text-3xl font-bold text-[#374151]" mb-1>{experience.name}</h1>
+            <p className="text-2xl text-[#14532d] font-semibold mt-0">{pricePerPerson}</p>
             <p className="text-[#4A4A4A] text-[17px] leading-relaxed">{experience.description}</p>
 
             {/* Swiper 1: attraction_cards */}
             {attractionCards.length > 0 && (
               <div className="relative mt-10">
-                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-center text-[#1f2937] w-full z-10 relative -mb-12">
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-lg font-semibold py8 text-center text-[#14532d] w-full z-10 relative -mb-12">
                   ¡{attractionCards.length} Razones para elegir esta experiencia!
                 </h3>
 
