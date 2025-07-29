@@ -34,7 +34,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
   const attractionCards = Object.values(experience.attraction_cards || {})
   const expectationImages = Object.values(experience.expectation_images || {})
-
+  const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona` //Precio Por Persona
   return (
     <div className="relative min-h-screen pb-20 bg-[#f9fafb] overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 xl:grid-cols-12 gap-6 mt-6">
@@ -54,13 +54,13 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           <div className="w-full space-y-6">
             <h1 className="text-3xl font-bold text-[#374151]">{experience.name}</h1>
-            <p className="text-2xl text-red-600 font-semibold">${experience.price}</p>
+            <p className="text-2xl text-[#14532d] font-semibold">{pricePerPerson}</p>
             <p className="text-[#4A4A4A] text-[17px] leading-relaxed">{experience.description}</p>
 
             {/* Swiper 1: attraction_cards */}
             {attractionCards.length > 0 && (
               <div className="relative mt-10">
-                <h3 className="text-2xl font-semibold text-center text-[#1f2937] w-full z-10 relative -mb-12">
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-center text-[#1f2937] w-full z-10 relative -mb-12">
                   ¡{attractionCards.length} Razones para elegir esta experiencia!
                 </h3>
 
@@ -156,6 +156,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
         {/* Sidebar Fijo */}
         <aside className="hidden xl:block fixed top-28 right-[80px] w-[380px] bg-white rounded-xl shadow-lg p-6 h-fit z-30">
           <div className="text-xl font-semibold text-[#14532d] mb-4">Reserva tu experiencia</div>
+          <p className="text-[17px] text-[#14532d] font-semibold">{pricePerPerson}</p>
 
           <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
           <input
