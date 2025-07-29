@@ -4,3 +4,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Evita scroll horizontal no deseado en toda la app */
+body {
+  overflow-x: hidden;
+}
