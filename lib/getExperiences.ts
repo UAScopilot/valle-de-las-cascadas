@@ -1,7 +1,6 @@
 // lib/getExperiences.ts
-import { db } from './firebase'; // Asegúrate de que esta ruta sea correcta para tu configuración de Firebase
+import { db } from './firebase';
 import { get, ref } from 'firebase/database';
-// ¡Importante! Importamos ExperienceInfoReference para el tipado del campo 'info'
 import { ExperienceInfoReference } from './getFirebaseInfo';
 
 export interface Experience {
@@ -13,21 +12,27 @@ export interface Experience {
   zone: string;
   state: string;
   slug: string;
-  // **Todos estos campos opcionales son cruciales para que se muestre el contenido adicional:**
+  // Propiedades nuevas/actualizadas solicitadas:
+  zone_state?: string; // Nueva
+  category?: string; // Nueva
+  meeting_point_details?: string; // Nueva
+  meeting_point_latitude?: number; // Nueva
+  meeting_point_longitude?: number; // Nueva
+
   attraction_cards?: Record<string, { reason: string }>;
   expectation_images?: Record<string, { image: string }>;
   expectations?: string;
-  includes_food?: string; // Podría ser '1' o '0' como string
+  includes_food?: string;
   duration?: string;
   duration_type?: string;
-  address?: string;
+  address?: string; // Mantener esta si aún la usas aparte de meeting_point
   address_details?: string;
   address_zone?: string;
   meeting_point?: string;
   meeting_time?: string;
   maximum_visitors?: number;
   plan?: Record<string, { title: string; description: string; order: string | number }>;
-  info?: Record<string, ExperienceInfoReference>; // Este campo referencia a z_btc_info
+  info?: Record<string, ExperienceInfoReference>;
 }
 
 export async function getExperiences(): Promise<Experience[]> {
@@ -43,7 +48,7 @@ export async function getExperiences(): Promise<Experience[]> {
     const data = snapshot.val();
 
     const experiences: Experience[] = Object.values(data)
-      .filter((item: any) => item && item.product_id && item.name && item.slug) // Filtra elementos válidos
+      .filter((item: any) => item && item.product_id && item.name && item.slug)
       .map((item: any) => ({
         product_id: item.product_id,
         name: item.name,
@@ -53,9 +58,14 @@ export async function getExperiences(): Promise<Experience[]> {
         zone: item.zone || '',
         state: item.state || '',
         slug: item.slug,
-        // **Asegúrate de mapear explícitamente todos los campos opcionales aquí.**
-        // Usamos `|| {}` para objetos y `|| ''` o `|| 0` para otras primitivas
-        // para asegurar que siempre haya un valor (incluso vacío) y evitar `undefined`.
+        // Mapeo de las nuevas propiedades
+        zone_state: item.zone_state || '',
+        category: item.category || '',
+        meeting_point_details: item.meeting_point_details || '',
+        meeting_point_latitude: item.meeting_point_latitude || 0,
+        meeting_point_longitude: item.meeting_point_longitude || 0,
+
+        // Mapeo de las propiedades existentes
         attraction_cards: item.attraction_cards || {},
         expectation_images: item.expectation_images || {},
         expectations: item.expectations || '',
@@ -69,7 +79,7 @@ export async function getExperiences(): Promise<Experience[]> {
         meeting_time: item.meeting_time || '',
         maximum_visitors: item.maximum_visitors || 0,
         plan: item.plan || {},
-        info: item.info || {}, // Mapea el campo 'info' también
+        info: item.info || {},
       }));
 
     console.log('✅ Experiencias cargadas:', experiences);
