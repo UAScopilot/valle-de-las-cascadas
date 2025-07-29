@@ -187,6 +187,12 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             Seleccionar
           </button>
         </aside>
+        {/* Botón fijo solo visible en móvil */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 xl:hidden z-50">
+         <button className="w-full bg-[#14532d] text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-all">
+          Reservar Experiencia
+         </button>
+        </div>
       </div>
     </div>
   )
