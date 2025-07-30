@@ -384,8 +384,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           <div className={`mt-8 p-6 bg-${cardBackgroundColor} rounded-xl shadow-sm border border-${borderColor}`}>
             <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-4`}>Políticas de cancelación</h2>
             <p className={`text-${mutedTextColor} text-base`}>
-              Aquí irán las políticas de cancelación de la experiencia. Puedes personalizar este texto más adelante.
-              Por ejemplo: "Cancelación gratuita hasta 24 horas antes del inicio de la actividad. Pasado este tiempo, no se ofrecerá reembolso."
+              "Cancelación gratuita hasta 24 horas antes del inicio de la actividad. Pasado este tiempo, no se ofrecerá reembolso."
             </p>
           </div>
 
