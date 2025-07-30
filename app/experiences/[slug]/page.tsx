@@ -222,11 +222,10 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   loop={true}
                   slidesPerView={1}
                   grabCursor={true}
-                  className="w-full h-80" // Mantenemos h-80 como lo tienes
+                  className="w-full h-64 md:h-80" // <--- ¡CAMBIO AQUÍ! Altura responsive
                 >
                   {attractionCards.map((card, idx) => (
                     <SwiperSlide key={idx}>
-                      {/* ¡CAMBIO AQUÍ! Modificamos las clases de tamaño de texto */}
                       <div className={`px-6 py-4 flex items-center justify-center h-full text-center text-${attractionCardTextColor} text-2xl sm:text-3xl font-bold max-w-lg mx-auto`}>
                         {card.reason}
                       </div>
