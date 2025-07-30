@@ -12,12 +12,15 @@ export interface Experience {
   zone: string;
   state: string;
   slug: string;
+  // Propiedad 'project_name' añadida aquí
+  project_name?: string; // Asegúrate de que esta propiedad exista en tus datos de Firebase
+
   // Propiedades nuevas/actualizadas solicitadas:
-  zone_state?: string; // Nueva
-  category?: string; // Nueva
-  meeting_point_details?: string; // Nueva
-  meeting_point_latitude?: number; // Nueva
-  meeting_point_longitude?: number; // Nueva
+  zone_state?: string; 
+  category?: string; 
+  meeting_point_details?: string; 
+  meeting_point_latitude?: number; 
+  meeting_point_longitude?: number; 
 
   attraction_cards?: Record<string, { reason: string }>;
   expectation_images?: Record<string, { image: string }>;
@@ -58,6 +61,9 @@ export async function getExperiences(): Promise<Experience[]> {
         zone: item.zone || '',
         state: item.state || '',
         slug: item.slug,
+        // Mapeo de 'project_name' añadido aquí
+        project_name: item.project_name || '', // Asegúrate de que el dato esté en Firebase con este nombre
+
         // Mapeo de las nuevas propiedades
         zone_state: item.zone_state || '',
         category: item.category || '',
