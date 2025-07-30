@@ -11,13 +11,14 @@ import 'swiper/css/navigation'
 import {
   ChevronLeft, ChevronRight, Clock, Utensils, Users, CalendarDays,
   Languages, MapPin, XCircle, UtensilsCrossed, CheckCircle, UserCircle, Tag, Map,
-  LucideIcon, Dot, Flag, LocateFixed, Circle, CircleDot 
+  LucideIcon, Dot, Flag, LocateFixed, Circle, CircleDot
 } from 'lucide-react'
 
 // Importa formatPrice, que es crucial para manejar el precio consistentemente
 import { formatPrice } from '@/app/utils/formatPrice';
 
 import { InfoItem, ExperienceInfoReference, GroupedInfo } from '@/lib/getFirebaseInfo';
+import MapView from '@/app/components/MapView'
 
 // --- NUEVA CONFIGURACIÓN DE COLORES SOBRIA Y ELEGANTE ---
 const primaryColor = 'teal'; // Color principal (ej. para botones, acentos)
@@ -60,7 +61,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
   const attractionCards = Object.values(experience.attraction_cards || {});
   const expectationImages = Object.values(experience.expectation_images || {});
-  
+
 
   const planSteps = Object.values(experience.plan || {})
     .sort((a, b) => parseInt(a.order as string) - parseInt(b.order as string));
@@ -322,29 +323,57 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             </div>
           )}
 
-          {/* 5. ¿Dónde nos encontraremos? - Título y detalles modificados */}
+          {/* 5. ¿Dónde nos encontraremos? - Título general y contenido detallado */}
           {(experience.meeting_point || experience.meeting_point_latitude || experience.meeting_point_longitude) && (
-            <div className={`mt-8 p-6 bg-${cardBackgroundColor} rounded-xl shadow-sm border border-${borderColor}`}>
-              <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-4`}>
-                {experience.meeting_point} {/* Nuevo título con la propiedad meeting_point */}
+            <section className={`mt-8 p-6 bg-${cardBackgroundColor} rounded-xl shadow-sm border border-${borderColor}`}>
+              {/* TÍTULO GENERAL DE LA SECCIÓN */}
+              <h2 className={`text-2xl md:text-3xl font-bold text-${strongTextColor} mb-6`}>
+                ¿Dónde nos encontraremos?
               </h2>
+
+              {/* Nombre del punto de encuentro */}
+              <h3 className={`text-xl md:text-2xl font-semibold text-${strongTextColor} mb-4`}>
+                {experience.meeting_point}
+              </h3>
+
               {experience.meeting_point_details && (
-                <p className={`text-${mutedTextColor} text-base mb-2`}>{experience.meeting_point_details}</p> 
+                <p className={`text-${mutedTextColor} text-base mb-2`}>
+                  {experience.meeting_point_details}
+                </p>
               )}
+
               {experience.meeting_time && (
-                <p className={`text-${mutedTextColor} text-base mb-4`}>Hora de Encuentro: {experience.meeting_time}</p>
+                <p className={`text-${mutedTextColor} text-base mb-4`}>
+                  Hora de Encuentro: {experience.meeting_time}
+                </p>
               )}
-              {(experience.meeting_point_latitude && experience.meeting_point_longitude) ? (
-                <div className={`mt-4 border border-gray-300 rounded-xl overflow-hidden h-64 flex items-center justify-center bg-gray-100 text-${primaryColor}-${primaryColorTextShade}`}>
-                  <Map className="w-12 h-12" />
-                  <p className="text-center text-sm">
-                    Mapa del punto de encuentro ({experience.meeting_point_latitude}, {experience.meeting_point_longitude}) - Integrar componente de mapa aquí
-                  </p>
+
+              {experience.meeting_point_latitude && experience.meeting_point_longitude ? (
+                <div className="mt-4 space-y-4">
+                  <div className="w-full h-64 sm:h-72 md:h-80 lg:h-[340px] xl:h-[380px] 2xl:h-[420px]">
+                    <MapView
+                      lat={experience.meeting_point_latitude}
+                      lng={experience.meeting_point_longitude}
+                    />
+                  </div>
+
+                  <div className="flex justify-center">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block w-full sm:w-auto text-center px-6 py-3 bg-teal-700 hover:bg-teal-800 text-white text-sm md:text-base font-semibold rounded-md shadow-md transition-all duration-300"
+                    >
+                      Abrir ubicación
+                    </a>
+                  </div>
                 </div>
               ) : (
-                <p className={`mt-4 text-${mutedTextColor} text-sm`}>Coordenadas del mapa no disponibles.</p>
+                <p className={`mt-4 text-${mutedTextColor} text-sm`}>
+                  Coordenadas del mapa no disponibles.
+                </p>
               )}
-            </div>
+            </section>
           )}
 
           {/* Información Adicional */}
