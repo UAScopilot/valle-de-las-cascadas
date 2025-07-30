@@ -15,6 +15,9 @@ import {
   LucideIcon
 } from 'lucide-react'
 
+// Importa formatPrice, que es crucial para manejar el precio consistentemente
+import { formatPrice } from '@/app/utils/formatPrice';
+
 import { InfoItem, ExperienceInfoReference, GroupedInfo } from '@/lib/getFirebaseInfo';
 
 // --- NUEVA CONFIGURACIÓN DE COLORES SOBRIA Y ELEGANTE ---
@@ -48,15 +51,32 @@ const iconMap: Record<string, LucideIcon> = {
 export default function ExperienceDetailPage({ params }: { params: { slug: string } }) {
   const { experiences, allInfoData, loading } = useExperiences()
 
+  // ✨ CONSOLE.LOGS PARA DEPURACIÓN DEL 404 Y DATOS ✨
+  console.log("--- DEBUG: app/experience/[slug]/page.tsx ---");
+  console.log("Slug de la URL (params.slug):", params.slug);
+  if (!loading && experiences.length > 0) {
+      console.log("Slugs disponibles en ExperienceDetailPage:", experiences.map(exp => exp.slug));
+  }
+  // ✨ FIN CONSOLE.LOGS ✨
+
   if (loading) return <p className={`p-4 text-${mutedTextColor}`}>Cargando experiencia.</p>
 
   const experience = experiences.find((exp) => exp.slug === params.slug);
+
+  // ✨ CONSOLE.LOG PARA VERIFICAR SI LA EXPERIENCIA SE ENCONTRÓ ✨
+  console.log("Experiencia encontrada (o undefined):", experience);
+  console.log("------------------------------------------");
+  // ✨ FIN CONSOLE.LOG ✨
+
   if (!experience) return notFound();
 
   // Pre-procesamiento de datos
+  // ✨ USANDO formatPrice para asegurar consistencia con las tarjetas y manejo de "N/A" ✨
+  const pricePerPerson = `${formatPrice(experience.price)} por persona`;
+
   const attractionCards = Object.values(experience.attraction_cards || {});
   const expectationImages = Object.values(experience.expectation_images || {});
-  const pricePerPerson = `$${experience.price.toLocaleString('es-CO')} por persona`;
+  
 
   const planSteps = Object.values(experience.plan || {})
     .sort((a, b) => parseInt(a.order as string) - parseInt(b.order as string));
@@ -135,6 +155,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             <h1 className={`text-2xl md:text-3xl font-bold text-${strongTextColor} mb-2`}>
               {experience.name}
             </h1>
+            {/* Aquí ahora usa pricePerPerson, que ya fue formateado con formatPrice */}
             <p className={`text-xl font-semibold text-${primaryColor}-${primaryColorShade} mt-0`}>{pricePerPerson}</p>
 
             {/* Información Básica (Badges) */}
