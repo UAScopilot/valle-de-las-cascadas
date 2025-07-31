@@ -133,8 +133,14 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 640px) 100vw, 
+             (max-width: 768px) 100vw,
+             (max-width: 1024px) 100vw,
+             (max-width: 1280px) 80vw,
+             60vw"
             />
           </div>
+
 
           <div className={`w-full space-y-6 mt-6 p-4 bg-${cardBackgroundColor} rounded-xl shadow-sm border border-${borderColor}`}>
             <h1 className={`text-2xl md:text-3xl font-bold text-${strongTextColor} mb-1`}>
@@ -237,56 +243,67 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             </div>
           )}
 
-          {/* 3. Lo que encontrarás (Swiper con imágenes redondeadas) */}
-          {expectationImages.length > 0 && (
-            <div className="mt-8 rounded-xl shadow-md overflow-hidden">
-              <h2 className={`text-xl md:text-2xl font-bold text-center text-${strongTextColor} py-4 bg-${cardBackgroundColor} border-b border-${borderColor}`}>
+          {/* 3. Lo que encontrarás (Swiper con imágenes redondeadas y expectativas) */}
+          {(expectationImages.length > 0 || experience.expectations) && (
+            <div className="mt-8 rounded-xl shadow-md overflow-hidden bg-white p-6 border border-${borderColor}">
+              <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-3`}> {/* Reducido a mb-3 */}
                 Lo que encontrarás
               </h2>
-              <div className="relative">
-                <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
-                  <div className="swiper-button-prev-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
-                    <ChevronLeft className="w-6 h-6" />
-                  </div>
-                  <div className="swiper-button-next-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
-                    <ChevronRight className="w-6 h-6" />
-                  </div>
-                </div>
-                <Swiper
-                  modules={[Pagination, Navigation]}
-                  pagination={{ clickable: true }}
-                  navigation={{
-                    nextEl: '.swiper-button-next-2',
-                    prevEl: '.swiper-button-prev-2',
-                  }}
-                  spaceBetween={4}
-                  loop={true}
-                  slidesPerView={1}
-                  grabCursor={true}
-                  className="w-full"
-                >
-                  {expectationImages.map((item, idx) => (
-                    <SwiperSlide key={idx}>
-                      <div className="relative w-full aspect-video overflow-hidden rounded-xl"> {/* Añadido rounded-xl aquí */}
-                        <Image
-                          src={item.image}
-                          alt={`expectation-${idx}`}
-                          fill
-                          className="object-cover rounded-xl" // Asegura que la imagen también se redondee
-                        />
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            </div>
-          )}
 
-          {/* Expectativas */}
-          {experience.expectations && (
-            <div className={`mt-8 p-6 bg-${cardBackgroundColor} rounded-xl shadow-sm border border-${borderColor}`}>
-              <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-4`}>Qué puedes esperar</h2>
-              <p className={`text-${mutedTextColor} text-base leading-relaxed`}>{experience.expectations}</p>
+              {/* Swiper de imágenes */}
+              {expectationImages.length > 0 && (
+                <div className="relative pt-6 pb-12 mb-3"> {/* Reducido a mb-3 */}
+                  <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
+                    <div className="swiper-button-prev-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronLeft className="w-6 h-6" />
+                    </div>
+                    <div className="swiper-button-next-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
+                      <ChevronRight className="w-6 h-6" />
+                    </div>
+                  </div>
+                  <Swiper
+                    modules={[Pagination, Navigation]}
+                    pagination={{
+                      clickable: true,
+                      dynamicBullets: true,
+                      el: '.swiper-pagination-2',
+                    }}
+                    navigation={{
+                      nextEl: '.swiper-button-next-2',
+                      prevEl: '.swiper-button-prev-2',
+                    }}
+                    spaceBetween={16}
+                    loop={true}
+                    slidesPerView={1}
+                    grabCursor={true}
+                    className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px]"
+                  >
+                    {expectationImages.map((item, idx) => (
+                      <SwiperSlide key={idx}>
+                        <div className="relative w-full h-full overflow-hidden rounded-xl shadow-md">
+                          <Image
+                            src={item.image}
+                            alt={`expectation-${idx}`}
+                            fill
+                            className="object-cover rounded-xl"
+                            sizes="(max-width: 640px) 100vw, 
+                                 (max-width: 768px) 100vw,
+                                 (max-width: 1024px) 90vw,
+                                 (max-width: 1280px) 70vw,
+                                 50vw"
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                    <div className="swiper-pagination-2 absolute bottom-2 left-0 right-0 z-10 flex justify-center mt-4"></div>
+                  </Swiper>
+                </div>
+              )}
+
+              {/* Texto expectations ahora dentro de este bloque */}
+              {experience.expectations && (
+                <p className={`text-${mutedTextColor} text-base leading-relaxed`}>{experience.expectations}</p>
+              )}
             </div>
           )}
 
@@ -350,7 +367,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
               {experience.meeting_point_latitude && experience.meeting_point_longitude ? (
                 <div className="mt-4 space-y-4">
-                  <div className="w-full h-64 sm:h-72 md:h-80 lg:h-[340px] xl:h-[380px] 2xl:h-[420px]">
+                  {/* Contenedor del mapa ahora con aspecto fijo y responsivo */}
+                  <div className="w-full aspect-video rounded-xl overflow-hidden shadow-md"> {/* CAMBIO CLAVE AQUÍ */}
                     <MapView
                       lat={experience.meeting_point_latitude}
                       lng={experience.meeting_point_longitude}
@@ -359,12 +377,12 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
                   <div className="flex justify-center">
                     <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`}
+                      href={`https://www.google.com/maps/search/?api=1&query=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`} // URL de Google Maps corregida
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block w-full sm:w-auto text-center px-6 py-3 bg-teal-700 hover:bg-teal-800 text-white text-sm md:text-base font-semibold rounded-md shadow-md transition-all duration-300"
                     >
-                      Abrir ubicación
+                      Abrir ubicación en Google Maps
                     </a>
                   </div>
                 </div>
