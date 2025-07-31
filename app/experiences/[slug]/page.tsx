@@ -251,7 +251,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Lo que encontrarás (Swiper con imágenes y expectativas) */}
           {(expectationImages.length > 0 || experience.expectations) && (
-            <div className={`mt-12 pt-6 pb-6 border-b ${borderColorClass}`}>
+            <div className={`mt-8 pt-6 pb-6 border-b ${borderColorClass}`}>
               <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>
                 Lo que encontrarás
               </h2>
@@ -309,9 +309,9 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Plan de Experiencia / Itinerario con iconos personalizados */}
           {planSteps.length > 0 && (
-            <div className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
+            <div className={`mt-8 pb-6 border-b ${borderColorClass}`}>
               <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>Tu Plan de Experiencia</h2>
-              <ol className="relative border-s border-gray-300 ml-4 md:ml-0">
+              <ol className="relative border-s border-gray-300 ml-4 md:ml-6">
                 {planSteps.map((step, idx) => {
                   let StepIcon: LucideIcon;
                   if (idx === 0) {
