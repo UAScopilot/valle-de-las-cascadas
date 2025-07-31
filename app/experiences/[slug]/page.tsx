@@ -246,13 +246,13 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           {/* 3. Lo que encontrarás (Swiper con imágenes redondeadas y expectativas) */}
           {(expectationImages.length > 0 || experience.expectations) && (
             <div className="mt-8 rounded-xl shadow-md overflow-hidden bg-white p-6 border border-${borderColor}">
-              <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-3`}> {/* Reducido a mb-3 */}
+              <h2 className={`text-xl md:text-2xl font-bold text-${strongTextColor} mb-0`}> {/* Reducido a mb-2 */}
                 Lo que encontrarás
               </h2>
 
               {/* Swiper de imágenes */}
               {expectationImages.length > 0 && (
-                <div className="relative pt-6 pb-12 mb-3"> {/* Reducido a mb-3 */}
+                <div className="relative -mx-6 pt-6 pb-12 "> {/* -mx-6 para ocupar todo el ancho, eliminado mb-3 */}
                   <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
                     <div className="swiper-button-prev-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
                       <ChevronLeft className="w-6 h-6" />
