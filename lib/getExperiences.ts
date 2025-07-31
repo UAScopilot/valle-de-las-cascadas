@@ -16,11 +16,11 @@ export interface Experience {
   project_name?: string; // Asegúrate de que esta propiedad exista en tus datos de Firebase
 
   // Propiedades nuevas/actualizadas solicitadas:
-  zone_state?: string; 
-  category?: string; 
-  meeting_point_details?: string; 
-  meeting_point_latitude?: number; 
-  meeting_point_longitude?: number; 
+  zone_state?: string;
+  category?: string;
+  meeting_point_details?: string;
+  meeting_point_latitude?: number;
+  meeting_point_longitude?: number;
 
   attraction_cards?: Record<string, { reason: string }>;
   expectation_images?: Record<string, { image: string }>;
@@ -68,8 +68,18 @@ export async function getExperiences(): Promise<Experience[]> {
         zone_state: item.zone_state || '',
         category: item.category || '',
         meeting_point_details: item.meeting_point_details || '',
-        meeting_point_latitude: item.meeting_point_latitude || 0,
-        meeting_point_longitude: item.meeting_point_longitude || 0,
+        meeting_point_latitude:
+          typeof item.meeting_point_latitude === 'string'
+            ? parseFloat(item.meeting_point_latitude)
+            : typeof item.meeting_point_latitude === 'number'
+              ? item.meeting_point_latitude
+              : 0,
+        meeting_point_longitude:
+          typeof item.meeting_point_longitude === 'string'
+            ? parseFloat(item.meeting_point_longitude)
+            : typeof item.meeting_point_longitude === 'number'
+              ? item.meeting_point_longitude
+              : 0,
 
         // Mapeo de las propiedades existentes
         attraction_cards: item.attraction_cards || {},

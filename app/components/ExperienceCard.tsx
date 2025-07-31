@@ -113,7 +113,7 @@ export default function ExperienceCard({
             {includes_food === '1' && (
               <div className={`flex items-center text-${mutedTextColor}`}>
                 <Utensils className={`h-4 w-4 mr-1 text-${primaryColor}-${primaryColorShade}`} />
-                <span>Incluye comida</span>
+                <span>Incluye alimentación</span>
               </div>
             )}
           </div>

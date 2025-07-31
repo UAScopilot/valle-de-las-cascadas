@@ -27,7 +27,7 @@ const primaryColorShade = '700';
 const primaryColorTextShade = '700';
 
 const mutedTextColor = 'gray-600';
-const strongTextColor = 'gray-900';
+const strongTextColor = 'gray-800';
 const borderColor = 'gray-200'; // Se usará para las líneas divisorias
 
 // Clases Tailwind completas construidas a partir de las constantes
@@ -141,10 +141,10 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
               className="object-cover rounded-xl shadow-md"
               priority
               sizes="(max-width: 640px) 100vw,
-                     (max-width: 768px) 100vw,
-                     (max-width: 1024px) 100vw,
-                     (max-width: 1280px) 80vw,
-                     60vw"
+                         (max-width: 768px) 100vw,
+                         (max-width: 1024px) 100vw,
+                         (max-width: 1280px) 80vw,
+                         60vw"
             />
           </div>
 
@@ -211,8 +211,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Razones para Elegir (Swiper) - Mantiene su fondo de color ya que es parte de su diseño */}
           {attractionCards.length > 0 && (
-            <div className={`relative mt-8  rounded-xl shadow-md overflow-hidden w-full border-b ${borderColorClass}`}>
-              <h3 className={`absolute top-4 left-1/2 transform -translate-x-1/2 z-10 text-md md:text-lg font-bold  text-amber-400 text-center px-4 py-2`}>
+            <div className={`relative mt-8  rounded-xl shadow-md overflow-hidden w-full border-b ${borderColorClass}`}>
+              <h3 className={`absolute top-4 left-1/2 transform -translate-x-1/2 z-10 text-md md:text-lg font-bold text-amber-400 text-center px-4 py-2`}>
                 {attractionCards.length} Razones para elegir esta experiencia
               </h3>
               <div className="relative">
@@ -252,7 +252,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           {/* Lo que encontrarás (Swiper con imágenes y expectativas) */}
           {(expectationImages.length > 0 || experience.expectations) && (
             <div className={`mt-8 pt-6 pb-6 border-b ${borderColorClass}`}>
-              <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>
+              <h2 className={`text-xl md:text-2xl font-bold ${primaryColorClass} mb-4`}>
                 Lo que encontrarás
               </h2>
 
@@ -310,7 +310,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           {/* Plan de Experiencia / Itinerario con iconos personalizados */}
           {planSteps.length > 0 && (
             <div className={`mt-8 pb-6 border-b ${borderColorClass}`}>
-              <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>Tu Plan de Experiencia</h2>
+              <h2 className={`text-xl md:text-2xl font-bold ${primaryColorClass} mb-4`}>Tu Plan de Experiencia</h2>
               <ol className="relative border-s border-gray-300 ml-4 md:ml-6">
                 {planSteps.map((step, idx) => {
                   let StepIcon: LucideIcon;
@@ -342,8 +342,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* ¿Dónde nos encontraremos? */}
           {(experience.meeting_point || experience.meeting_point_latitude || experience.meeting_point_longitude) && (
-            <section className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
-              <h2 className={`text-2xl md:text-3xl font-bold ${strongTextColorClass} mb-6`}>
+            <section className={`mt-8 pb-6 border-b ${borderColorClass}`}>
+              <h2 className={`text-2xl md:text-3xl font-bold ${primaryColorClass} mb-6`}>
                 ¿Dónde nos encontraremos?
               </h2>
 
@@ -365,7 +365,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
               {experience.meeting_point_latitude && experience.meeting_point_longitude ? (
                 <div className="mt-4 space-y-4">
-                  <div className="w-full aspect-video rounded-xl overflow-hidden shadow-md"> {/* Mantiene sombra y redondeado para el mapa */}
+                  <div className="w-full aspect-video rounded-xl overflow-hidden shadow-md">
                     <MapView
                       lat={experience.meeting_point_latitude}
                       lng={experience.meeting_point_longitude}
@@ -373,14 +373,14 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   </div>
 
                   <div className="flex justify-center">
-                    {/* MODIFICACIÓN: URL de Google Maps corregida */}
                     <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`}
+                      // --- MODIFICACIÓN IMPORTANTE AQUÍ: El enlace corregido ---
+                      href={`https://www.google.com/maps/place/${experience.meeting_point_latitude},${experience.meeting_point_longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-block w-full sm:w-auto text-center px-6 py-3 ${primaryBgColorClass} ${attractionCardTextColorClass} text-sm md:text-base font-semibold rounded-md shadow-md transition-all duration-300 ${primaryHoverBgColorClass}`}
                     >
-                      Abrir ubicación en Google Maps
+                      Abrir ubicación
                     </a>
                   </div>
                 </div>
@@ -395,7 +395,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           {/* Información Adicional */}
           {additionalInfo.length > 0 && (
             <div className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
-              <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>Información Adicional</h2>
+              <h2 className={`text-xl md:text-2xl font-bold ${primaryColorClass} mb-4`}>Información Adicional</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                 {additionalInfo.map((group, groupIdx) => (
                   <div key={groupIdx} className="mb-2">
@@ -421,7 +421,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Políticas de cancelación con experience.project_name */}
           <div className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
-            <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>Políticas de Cancelación</h2>
+            <h2 className={`text-xl md:text-2xl font-bold ${primaryColorClass} mb-4`}>Políticas de Cancelación</h2>
             <p className={`${mutedTextColorClass} text-base`}>
               Entendemos que los planes pueden cambiar. Para garantizar una gestión justa y eficiente, te presentamos nuestras políticas de cancelación:
             </p>
@@ -449,7 +449,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Preguntas y respuestas provisional - Última sección, sin border-b */}
           <div className={`mt-8 pb-12`}> {/* Quitado border-b y se deja un padding bottom generoso */}
-            <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>Preguntas y respuestas</h2>
+            <h2 className={`text-xl md:text-2xl font-bold ${primaryColorClass} mb-4`}>Preguntas y respuestas</h2>
             <div className="space-y-4">
               <div>
                 <h3 className={`text-lg font-semibold ${strongTextColorClass}`}>¿Es apto para niños?</h3>

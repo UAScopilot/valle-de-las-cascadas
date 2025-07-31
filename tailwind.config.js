@@ -1,3 +1,5 @@
+// tailwind.config.js
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -17,13 +19,19 @@ module.exports = {
     // Si en el futuro decides usar variables para fondos (ej. bg-${primaryColor}-...),
     // también podrías añadir un patrón para ellos:
     // {
-    //   pattern: /bg-teal-(100|200|300|400|500|600|700|800|900)/,
-    //   variants: ['hover', 'focus'],
+    //   pattern: /bg-teal-(100|200|300|400|500|600|700|800|900)/,
+    //   variants: ['hover', 'focus'],
     // },
   ],
   // ✨ FIN DE LA SECCIÓN A AÑADIR ✨
   theme: {
-    extend: {},
+    extend: {
+      // --- CAMBIO AQUÍ ---
+      colors: {
+        darkGray: '#4a4a4a', // Se ha añadido tu color personalizado
+      },
+      // ------------------
+    },
   },
   plugins: [],
 };
