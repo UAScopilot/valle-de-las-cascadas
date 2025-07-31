@@ -9,3 +9,18 @@
 body {
   overflow-x: hidden;
 }
+
+/* ------------------------------------------- */
+/* --- ESTILOS ADICIONALES PARA SWIPER --- */
+/* ------------------------------------------- */
+
+/* Estilos para la paginación de Swiper (versión corregida) */
+.swiper-pagination-bullet {
+  background: #ccc !important; /* Color de los puntos inactivos */
+  opacity: 0.8;
+}
+
+.swiper-pagination-bullet-active {
+  background: #ffffff !important; /* Color del punto activo, equivalente a teal-700 en Tailwind */
+  opacity: 1;
+}

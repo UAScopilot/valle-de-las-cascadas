@@ -40,7 +40,6 @@ const strongTextColorClass = `text-${strongTextColor}`;
 const borderColorClass = `border-${borderColor}`; // Para la línea divisoria
 
 // Colores para las tarjetas de "Razones para elegir" - se mantienen porque son una sección con fondo propio.
-const attractionCardBackgroundColorClass = `bg-${primaryColorName}-${primaryColorShade}`;
 const attractionCardTextColorClass = 'text-white';
 // --- FIN NUEVA CONFIGURACIÓN DE COLORES ---
 
@@ -151,15 +150,15 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Información Básica */}
           <div className={`w-full space-y-6 pt-0 pb-6 border-b ${borderColorClass}`}> {/* Sin padding top, solo padding bottom para la línea */}
-            <h1 className={`text-2xl md:text-3xl font-bold ${strongTextColorClass} mb-1`}>
+            <h1 className={`text-2xl md:text-3xl font-bold ${strongTextColorClass}`}>
               {experience.name}
             </h1>
             {experience.project_name && (
-              <p className={`text-base md:text-lg font-semibold ${mutedTextColorClass} mb-2`}>
+              <p className={`text-base md:text-lg font-semibold ${mutedTextColorClass}`}>
                 {experience.project_name}
               </p>
             )}
-            <p className={`text-xl font-semibold ${primaryColorClass} mt-0`}>{pricePerPerson}</p>
+            <p className={`text-xl font-semibold ${primaryColorClass}`}>{pricePerPerson}</p>
 
             {/* Información Básica (Badges) */}
             <div className="flex flex-wrap items-center gap-2 text-sm md:text-base text-gray-700">
@@ -212,8 +211,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Razones para Elegir (Swiper) - Mantiene su fondo de color ya que es parte de su diseño */}
           {attractionCards.length > 0 && (
-            <div className={`relative mt-8 ${attractionCardBackgroundColorClass} rounded-xl shadow-md overflow-hidden w-full pb-6 border-b ${borderColorClass}`}> {/* Añadido border-b y pb-6 */}
-              <h3 className={`text-md md:text-lg font-semibold text-center ${attractionCardTextColorClass} py-3`}>
+            <div className={`relative mt-8  rounded-xl shadow-md overflow-hidden w-full border-b ${borderColorClass}`}>
+              <h3 className={`absolute top-4 left-1/2 transform -translate-x-1/2 z-10 text-md md:text-lg font-bold  text-amber-400 text-center px-4 py-2`}>
                 {attractionCards.length} Razones para elegir esta experiencia
               </h3>
               <div className="relative">
@@ -239,9 +238,8 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   className="w-full h-64 md:h-80"
                 >
                   {attractionCards.map((card, idx) => (
-                    <SwiperSlide key={idx}>
-                      {/* MODIFICACIÓN: Se añade la clase de fondo al div interno para asegurar la visibilidad del texto blanco */}
-                      <div className={`px-6 py-4 flex items-center justify-center h-full text-center ${attractionCardTextColorClass} text-2xl sm:text-3xl font-bold max-w-lg mx-auto ${attractionCardBackgroundColorClass}`}>
+                    <SwiperSlide key={idx} className="bg-teal-700">
+                      <div className={`px-6 py-4 flex items-center justify-center h-full text-center ${attractionCardTextColorClass} text-2xl sm:text-3xl font-bold max-w-lg mx-auto`}>
                         {card.reason}
                       </div>
                     </SwiperSlide>
@@ -253,14 +251,14 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
           {/* Lo que encontrarás (Swiper con imágenes y expectativas) */}
           {(expectationImages.length > 0 || experience.expectations) && (
-            <div className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
+            <div className={`mt-12 pt-6 pb-6 border-b ${borderColorClass}`}>
               <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>
                 Lo que encontrarás
               </h2>
 
               {/* Swiper de imágenes */}
               {expectationImages.length > 0 && (
-                <div className="relative pt-2 pb-12 "> {/* -mx-6 para ocupar todo el ancho, eliminado mb-3 */}
+                <div className="relative pt-2 pb-12 ">
                   <div className="hidden lg:flex justify-between absolute top-1/2 w-full transform -translate-y-1/2 px-2 z-10 pointer-events-none">
                     <button className="swiper-button-prev-2 pointer-events-auto bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-md transition-all duration-300">
                       <ChevronLeft className="w-6 h-6" />
@@ -271,11 +269,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   </div>
                   <Swiper
                     modules={[Pagination, Navigation]}
-                    pagination={{
-                      clickable: true,
-                      dynamicBullets: true,
-                      el: '.swiper-pagination-2',
-                    }}
+                    pagination={{ clickable: true }}
                     navigation={{
                       nextEl: '.swiper-button-next-2',
                       prevEl: '.swiper-button-prev-2',
@@ -288,22 +282,21 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   >
                     {expectationImages.map((item, idx) => (
                       <SwiperSlide key={idx}>
-                        <div className="relative w-full h-full overflow-hidden rounded-xl shadow-md"> {/* Mantiene sombras y redondeado para las imágenes individuales */}
+                        <div className="relative w-full h-full overflow-hidden rounded-xl shadow-md">
                           <Image
                             src={item.image}
                             alt={`expectation-${idx}`}
                             fill
                             className="object-cover rounded-xl"
                             sizes="(max-width: 640px) 100vw,
-                                   (max-width: 768px) 100vw,
-                                   (max-width: 1024px) 90vw,
-                                   (max-width: 1280px) 70vw,
-                                   50vw"
+                         (max-width: 768px) 100vw,
+                         (max-width: 1024px) 90vw,
+                         (max-width: 1280px) 70vw,
+                         50vw"
                           />
                         </div>
                       </SwiperSlide>
                     ))}
-                    <div className="swiper-pagination-2 absolute bottom-2 left-0 right-0 z-10 flex justify-center mt-4"></div>
                   </Swiper>
                 </div>
               )}
@@ -527,6 +520,6 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           </a>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
