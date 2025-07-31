@@ -22,26 +22,26 @@ import MapView from '@/app/components/MapView'
 
 // --- NUEVA CONFIGURACIÓN DE COLORES SOBRIA Y ELEGANTE (CORREGIDA PARA TAILWIND) ---
 // Estas constantes ahora solo definen los colores base que se usarán en las clases Tailwind completas
-const primaryColorName = 'teal'; 
-const primaryColorShade = '700'; 
-const primaryColorTextShade = '700'; 
+const primaryColorName = 'teal';
+const primaryColorShade = '700';
+const primaryColorTextShade = '700';
 
-const mutedTextColor = 'gray-600'; 
-const strongTextColor = 'gray-900'; 
+const mutedTextColor = 'gray-600';
+const strongTextColor = 'gray-900';
 const borderColor = 'gray-200'; // Se usará para las líneas divisorias
 
 // Clases Tailwind completas construidas a partir de las constantes
 const primaryColorClass = `text-${primaryColorName}-${primaryColorTextShade}`;
 const primaryBgColorClass = `bg-${primaryColorName}-${primaryColorShade}`;
-const primaryHoverBgColorClass = `hover:bg-${primaryColorName}-${parseInt(primaryColorShade) + 100}`; 
+const primaryHoverBgColorClass = `hover:bg-${primaryColorName}-${parseInt(primaryColorShade) + 100}`;
 
 const mutedTextColorClass = `text-${mutedTextColor}`;
 const strongTextColorClass = `text-${strongTextColor}`;
 const borderColorClass = `border-${borderColor}`; // Para la línea divisoria
 
 // Colores para las tarjetas de "Razones para elegir" - se mantienen porque son una sección con fondo propio.
-const attractionCardBackgroundColorClass = `bg-${primaryColorName}-${primaryColorShade}`; 
-const attractionCardTextColorClass = 'text-white'; 
+const attractionCardBackgroundColorClass = `bg-${primaryColorName}-${primaryColorShade}`;
+const attractionCardTextColorClass = 'text-white';
 // --- FIN NUEVA CONFIGURACIÓN DE COLORES ---
 
 
@@ -87,7 +87,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
     for (const infoKey in experience.info) {
       const infoRef = experience.info[infoKey];
-      const detail = allInfoData?.[infoRef?.["info_id"]]; 
+      const detail = allInfoData?.[infoRef?.["info_id"]];
       if (detail) {
         relevantInfoItems.push(detail);
         if (detail.main_id === 'languages') {
@@ -101,14 +101,14 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
     relevantInfoItems.forEach(item => {
       if (item.main_id === 'languages') return;
 
-      if (!grouped?.[item.product_info_title]) { 
+      if (!grouped?.[item.product_info_title]) {
         grouped[item.product_info_title] = {
           title: item.product_info_title,
           order: parseInt(item.order),
           items: [],
         };
       }
-      const IconComponent = iconMap[item.icon]; 
+      const IconComponent = iconMap[item.icon];
       if (IconComponent) {
         grouped[item.product_info_title].items.push({
           icon: IconComponent,
@@ -129,23 +129,23 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
 
   return (
     <div className="relative min-h-screen pb-20 bg-white overflow-x-hidden"> {/* Fondo de pantalla blanco */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 xl:grid-cols-12 gap-8 mt-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 xl:grid-cols-12 gap-8 pt-[80px]">
         {/* Columna principal */}
         <div className="xl:col-span-8 overflow-x-hidden">
 
           {/* Imagen superior - Mantiene sombras y bordes redondeados como un elemento visual principal */}
-          <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] xl:h-[480px] 2xl:h-[560px] rounded-xl overflow-hidden shadow-md mb-8">
+          <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[420px] xl:h-[480px] 2xl:h-[500px] overflow-hidden  mb-8">
             <Image
               src={experience.image}
               alt={experience.name}
               fill
-              className="object-cover"
+              className="object-cover rounded-xl shadow-md"
               priority
-              sizes="(max-width: 640px) 100vw, 
-              (max-width: 768px) 100vw,
-              (max-width: 1024px) 100vw,
-              (max-width: 1280px) 80vw,
-              60vw"
+              sizes="(max-width: 640px) 100vw,
+                     (max-width: 768px) 100vw,
+                     (max-width: 1024px) 100vw,
+                     (max-width: 1280px) 80vw,
+                     60vw"
             />
           </div>
 
@@ -236,11 +236,12 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   loop={true}
                   slidesPerView={1}
                   grabCursor={true}
-                  className="w-full h-64 md:h-80" 
+                  className="w-full h-64 md:h-80"
                 >
                   {attractionCards.map((card, idx) => (
                     <SwiperSlide key={idx}>
-                      <div className={`px-6 py-4 flex items-center justify-center h-full text-center ${attractionCardTextColorClass} text-2xl sm:text-3xl font-bold max-w-lg mx-auto`}>
+                      {/* MODIFICACIÓN: Se añade la clase de fondo al div interno para asegurar la visibilidad del texto blanco */}
+                      <div className={`px-6 py-4 flex items-center justify-center h-full text-center ${attractionCardTextColorClass} text-2xl sm:text-3xl font-bold max-w-lg mx-auto ${attractionCardBackgroundColorClass}`}>
                         {card.reason}
                       </div>
                     </SwiperSlide>
@@ -253,7 +254,7 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
           {/* Lo que encontrarás (Swiper con imágenes y expectativas) */}
           {(expectationImages.length > 0 || experience.expectations) && (
             <div className={`mt-8 pb-6 border-b ${borderColorClass}`}> {/* Sin padding ni bordes, solo padding bottom y línea */}
-              <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}> 
+              <h2 className={`text-xl md:text-2xl font-bold ${strongTextColorClass} mb-4`}>
                 Lo que encontrarás
               </h2>
 
@@ -290,10 +291,10 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                         <div className="relative w-full h-full overflow-hidden rounded-xl shadow-md"> {/* Mantiene sombras y redondeado para las imágenes individuales */}
                           <Image
                             src={item.image}
-                            alt={`expectation-${idx}`} 
+                            alt={`expectation-${idx}`}
                             fill
                             className="object-cover rounded-xl"
-                            sizes="(max-width: 640px) 100vw, 
+                            sizes="(max-width: 640px) 100vw,
                                    (max-width: 768px) 100vw,
                                    (max-width: 1024px) 90vw,
                                    (max-width: 1280px) 70vw,
@@ -321,11 +322,11 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                 {planSteps.map((step, idx) => {
                   let StepIcon: LucideIcon;
                   if (idx === 0) {
-                    StepIcon = MapPin; 
+                    StepIcon = MapPin;
                   } else if (idx === planSteps.length - 1) {
-                    StepIcon = Flag; 
+                    StepIcon = Flag;
                   } else {
-                    StepIcon = CircleDot; 
+                    StepIcon = CircleDot;
                   }
 
                   return (
@@ -379,8 +380,9 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
                   </div>
 
                   <div className="flex justify-center">
+                    {/* MODIFICACIÓN: URL de Google Maps corregida */}
                     <a
-                      href={`http://maps.google.com/?q=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`} // URL de Google Maps corregida
+                      href={`https://www.google.com/maps/search/?api=1&query=${experience.meeting_point_latitude},${experience.meeting_point_longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-block w-full sm:w-auto text-center px-6 py-3 ${primaryBgColorClass} ${attractionCardTextColorClass} text-sm md:text-base font-semibold rounded-md shadow-md transition-all duration-300 ${primaryHoverBgColorClass}`}
@@ -518,8 +520,9 @@ export default function ExperienceDetailPage({ params }: { params: { slug: strin
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={`block w-full text-center ${primaryBgColorClass} ${attractionCardTextColorClass} text-lg font-semibold py-2 rounded-md ${primaryHoverBgColorClass} shadow-md`}
+            className={`block w-full text-center ${primaryBgColorClass} text-white text-lg font-semibold py-2 rounded-md ${primaryHoverBgColorClass} shadow-md`}
           >
+            {/* MODIFICACIÓN: El texto del botón se asegura de ser blanco, evitando el conflicto anterior */}
             Reservar Experiencia
           </a>
         </div>
