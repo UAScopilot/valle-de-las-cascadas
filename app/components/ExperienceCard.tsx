@@ -121,7 +121,7 @@ export default function ExperienceCard({
           {/* Sección del precio, empujada al final de la tarjeta. */}
           <div className={`mt-auto pt-3 border-t border-${borderColor} flex justify-between items-center`}>
             <p className={`text-xl font-bold text-${primaryColor}-${primaryColorShade}`}>
-              {displayPrice}
+              {displayPrice} por persona
             </p>
           </div>
         </div>
