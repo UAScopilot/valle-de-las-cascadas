@@ -23,15 +23,7 @@ export default function Home() {
 
   const { experiences, loading } = useExperiences()
 
-  // ✨ CONSOLE.LOGS PARA DEPURACIÓN EN LA PÁGINA PRINCIPAL ✨
-  if (!loading && experiences.length > 0) {
-    console.log("--- DEBUG: app/page.tsx ---");
-    console.log("Primera experiencia cargada (exp[0]):", experiences[0]);
-    console.log("Todos los slugs disponibles en app/page.tsx:", experiences.map(exp => exp.slug));
-    console.log("--------------------------");
-  }
-  // ✨ FIN CONSOLE.LOGS ✨
-
+  
   const filteredExperiences = experiences.filter((exp) =>
     exp.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
     exp.zone.toLowerCase().includes(debouncedSearch.toLowerCase())
